@@ -32,8 +32,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  bool buttonEnabled = false;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,8 +42,7 @@ class _MyHomePageState extends State<MyHomePage> {
             viewType: 'NativeViewExample',
           ),
           DraggableButtonBar(
-            toggleButtonEnabled: _toggleButton,
-            buttonEnabled: buttonEnabled,
+            onPressed: _toggleButton,
           ),
         ]),
       ),
@@ -54,19 +51,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _toggleButton() {
     log(' ~~~~~~~~~ Button received press ~~~~~~~~~ ');
-    setState(() {
-      buttonEnabled = !buttonEnabled;
-    });
   }
 }
 
 class DraggableButtonBar extends StatefulWidget {
-  final VoidCallback toggleButtonEnabled;
-  final bool buttonEnabled;
+  final VoidCallback onPressed;
 
   DraggableButtonBar({
-    @required this.toggleButtonEnabled,
-    @required this.buttonEnabled,
+    @required this.onPressed,
   });
 
   @override
@@ -95,30 +87,6 @@ class DraggableButtonBarState extends State<DraggableButtonBar> {
     );
   }
 
-  Widget _buildButton(
-      {Widget icon,
-      Color color = Colors.white,
-      Color buttonColor = Colors.white,
-      VoidCallback onPressed}) {
-    return Container(
-      height: 64,
-      width: 64,
-      decoration: ShapeDecoration(
-        color: buttonColor,
-        shape: CircleBorder(),
-      ),
-      child: Ink(
-        child: IconButton(
-          iconSize: 22,
-          color: color,
-          splashColor: color.withOpacity(0.5),
-          icon: icon,
-          onPressed: onPressed,
-        ),
-      ),
-    );
-  }
-
   Widget _buildContent() {
     return Container(
       decoration: BoxDecoration(
@@ -132,12 +100,16 @@ class DraggableButtonBarState extends State<DraggableButtonBar> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              _buildButton(
-                icon: widget.buttonEnabled
-                    ? Icon(Icons.camera_enhance_rounded)
-                    : Icon(Icons.flip_camera_ios),
-                buttonColor: widget.buttonEnabled ? Colors.grey : Colors.pink,
-                onPressed: widget.toggleButtonEnabled,
+              MaterialButton(
+                onPressed: widget.onPressed,
+                color: Colors.pink,
+                textColor: Colors.white,
+                child: Icon(
+                  Icons.camera_alt,
+                  size: 24,
+                ),
+                padding: EdgeInsets.all(16),
+                shape: CircleBorder(),
               ),
             ],
           ),
